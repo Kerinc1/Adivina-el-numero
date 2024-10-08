@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sixtyfour+Convergence&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <title>DadoGAME</title>
+</head>
+
+<body><section class="background-1">
+    <!-- Background image -->
+    <div
+        class="bg-image"
+        style="
+        background-image: url('https://www.sinavonline.net/wp-content/uploads/2023/09/sanal-kumar-siteleri.jpg');
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center center;
+        width: 100vw;
+        height: 100vh;
+        position: relative;
+        z-index: 1;">
+        <div class="mask" style="background-color: rgba(0, 0, 0, 0.6); height: 100vh;">
+        </div>
+    </div>
+</section>
+
+<section class="game">
+    <div class="background-2" style="
+        background-color: #fdf9f9;
+        width: 50vw;
+        height: 50vh;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        z-index: 2;
+        transform: translate(-50%, -50%);
+        border-radius: 3%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+    ">
+        <!-- Título del juego centrado -->
+        <h1 style="font-family: Sixtyfour Convergence, sans-serif; font-size: 2.5rem; margin-bottom: 20px;">
+            DADOS GAME
+        </h1>
+
+        <!-- Sección de juego (adivinanza y contador) en línea -->
+        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%;">
+            <!-- Texto de adivinanza -->
+            <div style="display: flex; flex-direction: row; justify-content: center; width: 100%; align-items: center;">
+                <!-- Sección izquierda: texto y botón -->
+                <div style="padding-right: 20px; text-align: center;">
+                    <p style="font-family: Sixtyfour Convergence, sans-serif; font-size: 1.3rem;">
+                        INTENTA ADIVINAR EL NÚMERO DEL DADO
+                    </p>
+                    <input type="number" id="numeroInput" style="
+                        margin-top: 10px;
+                        padding: 10px;
+                        font-size: 16px;
+                        width: 100%;
+                    " placeholder="Ingresa un número">
+                    <button onclick="checkGuess()" style="
+                        margin-top: 10px;
+                        padding: 10px 20px;
+                        font-size: 16px;
+                        background-color: #d32222;
+                        color: white;
+                        border: none;
+                        border-radius: 5px;
+                        cursor: pointer;
+                    ">Enviar</button>
+                </div>
+
+                <!-- Sección derecha: intentos restantes y dado -->
+                <div style="text-align: center; padding-left: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                    <h2 id="contador" style="font-family: Sixtyfour Convergence, sans-serif; font-size: 2rem;">
+                        Intentos restantes: 3
+                    </h2>
+                    <div class="dado" id="dado">
+                        <div class="cara" style="margin: 0 5px;">1</div>
+                        <div class="cara" style="margin: 0 5px;">2</div>
+                        <div class="cara" style="margin: 0 5px;">3</div>
+                        <div class="cara" style="margin: 0 5px;">4</div>
+                        <div class="cara" style="margin: 0 5px;">5</div>
+                        <div class="cara" style="margin: 0 5px;">6</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+    }
+    .dado {
+        width: 100px;
+        height: 100px;
+        position: relative;
+        transform-style: preserve-3d;
+        transform: rotateX(0deg) rotateY(0deg);
+        transition: transform 1s;
+        display: flex !important; 
+        flex-direction: row !important;
+        justify-content: center !important; 
+        margin-top: 20px; /* Espacio superior entre el contador y el dado */
+    }
+    .cara {
+        position: absolute;
+        width: 100px;
+        height: 100px;
+        background-color: rgb(231, 138, 138);
+        border: 1px solid #ccc;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 2em;
+        font-weight: bold;
+    }
+    .cara:nth-child(1) { transform: rotateY(0deg) translateZ(50px); }
+    .cara:nth-child(2) { transform: rotateY(180deg) translateZ(50px); }
+    .cara:nth-child(3) { transform: rotateY(90deg) translateZ(50px); }
+    .cara:nth-child(4) { transform: rotateY(-90deg) translateZ(50px); }
+    .cara:nth-child(5) { transform: rotateX(90deg) translateZ(50px); }
+    .cara:nth-child(6) { transform: rotateX(-90deg) translateZ(50px); }
+</style>
+
+<script>
+let intentos = 3;
+
+function lanzarDado() {
+    const dado = document.getElementById('dado');
+    const numero = Math.floor(Math.random() * 6) + 1;
+    let rotation;
+
+    // Rotación en función del número generado
+    switch (numero) {
+        case 1:
+            rotation = 'rotateX(0deg) rotateY(0deg)';
+            break;
+        case 2:
+            rotation = 'rotateX(0deg) rotateY(180deg)';
+            break;
+        case 3:
+            rotation = 'rotateY(-90deg) rotateX(0deg)';
+            break;
+        case 4:
+            rotation = 'rotateY(90deg) rotateX(0deg)';
+            break;
+        case 5:
+            rotation = 'rotateX(-90deg) rotateY(0deg)';
+            break;
+        case 6:
+            rotation = 'rotateX(90deg) rotateY(0deg)';
+            break;
+    }
+
+    // Aplicar la rotación al dado
+    dado.style.transform = rotation;
+    
+    // Devuelve el número para la comparación
+    return numero;
+}
+
+function checkGuess() {
+    const numeroIngresado = parseInt(document.getElementById('numeroInput').value);
+    const contador = document.getElementById('contador');
+
+    if (numeroIngresado < 1 || numeroIngresado > 6 || isNaN(numeroIngresado)) {
+        alert('Por favor ingresa un número válido entre 1 y 6');
+        return;
+    }
+
+    const numeroDelDado = lanzarDado(); // Lanza el dado y obtiene el número generado
+
+    setTimeout(() => {  // Esperar a que la animación termine (1 segundo)
+        if (numeroIngresado === numeroDelDado) {
+            alert('¡Correcto! El número era ' + numeroDelDado);
+            intentos = 3; // Reinicia los intentos
+            contador.textContent = 'Intentos restantes: ' + intentos;
+        } else {
+            intentos--;
+            if (intentos > 0) {
+                contador.textContent = 'Intentos restantes: ' + intentos;
+            } else {
+                alert('¡Se han agotado los intentos! El número era ' + numeroDelDado + '. Sigue intentando.');
+                intentos = 3; // Reinicia los intentos
+                contador.textContent = 'Intentos restantes: ' + intentos;
+            }
+        }
+    }, 1000);  // Esto asegura que la verificación se haga después de la rotación del dado
+}
+
+</script>
+
+
+
+</body>
+</html>
